@@ -20,19 +20,15 @@ spring:
 
 dubbo:
   application:
-    name: ${spring.application.name}
+    name: dubbo-springboot-demo-consumer
   protocol:
     name: dubbo
     port: -1
   registry:
-    id: zk-registry
-    address: zookeeper://127.0.0.1:2181
-  config-center:
-    address: zookeeper://127.0.0.1:2181
-  metadata-report:
-    address: zookeeper://127.0.0.1:2181
+    address: zookeeper://${zookeeper.address:127.0.0.1}:2181
 
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
-
+server:
+  port: 9090
