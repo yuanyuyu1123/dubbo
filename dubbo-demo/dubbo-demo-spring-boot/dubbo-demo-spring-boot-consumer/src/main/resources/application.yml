@@ -20,12 +20,13 @@ spring:
 
 dubbo:
   application:
+    logger: slf4j
     name: dubbo-springboot-demo-consumer
-  protocol:
-    name: dubbo
-    port: -1
   registry:
-    address: zookeeper://${zookeeper.address:127.0.0.1}:2181
+    address: nacos://${nacos.address:127.0.0.1}:8848
+  protocol:
+    name: rest
+    port: 8080
 
 logging:
   pattern:
