@@ -119,9 +119,9 @@
         <maven_compiler_version>3.11.0</maven_compiler_version>
         <maven_source_version>3.2.1</maven_source_version>
         <maven_javadoc_version>3.5.0</maven_javadoc_version>
-        <maven_jetty_version>9.4.52.v20230823</maven_jetty_version>
+        <maven_jetty_version>9.4.53.v20231009</maven_jetty_version>
         <maven_checkstyle_version>3.2.1</maven_checkstyle_version>
-        <maven_jacoco_version>0.8.10</maven_jacoco_version>
+        <maven_jacoco_version>0.8.11</maven_jacoco_version>
         <maven_flatten_version>1.5.0</maven_flatten_version>
         <maven_enforce_version>3.3.0</maven_enforce_version>
         <maven_antrun_version>3.1.0</maven_antrun_version>
@@ -136,7 +136,10 @@
         <jprotoc_version>1.2.2</jprotoc_version>
         <protobuf-java_version>3.22.3</protobuf-java_version>
         <grpc_version>1.54.0</grpc_version>
-        <revision>3.2.6-SNAPSHOT</revision>
+        <spotless-maven-plugin.version>2.40.0</spotless-maven-plugin.version>
+        <spotless.action>check</spotless.action>
+        <dubbo-shared-resources.version>1.0.0</dubbo-shared-resources.version>
+        <revision>3.2.8-SNAPSHOT</revision>
     </properties>
 
     <modules>
@@ -503,7 +506,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>license-maven-plugin</artifactId>
-                        <version>2.2.0</version>
+                        <version>2.3.0</version>
                         <executions>
                             <execution>
                                 <id>license-check</id>
@@ -604,6 +607,93 @@
             <properties>
                 <maven_jacoco_version>0.8.9</maven_jacoco_version>
             </properties>
+        </profile>
+
+        <profile>
+            <id>java11+</id>
+            <activation>
+                <jdk>[11,)</jdk>
+            </activation>
+            <build>
+                <!--- newer versions of plugins requires JDK 11 -->
+                <plugins>
+                    <plugin>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
+                        <version>${spotless-maven-plugin.version}</version>
+                        <configuration>
+                            <java>
+                                <excludes>
+                                    <exclude>src/main/java/org/apache/dubbo/common/threadlocal/InternalThreadLocal.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/threadlocal/InternalThreadLocalMap.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/timer/HashedWheelTimer.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/timer/Timeout.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/timer/Timer.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/timer/TimerTask.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/utils/CIDRUtils.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/utils/Utf8Utils.java</exclude>
+                                    <exclude>src/test/java/org/apache/dubbo/config/spring/EmbeddedZooKeeper.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/test/common/utils/TestSocketUtils.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/rpc/protocol/tri/TriHttp2RemoteFlowController.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/common/threadpool/serial/SerializingExecutor.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/AbstractAotMojo.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/AbstractDependencyFilterMojo.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/CommandLineBuilder.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/DependencyFilter.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/Exclude.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/ExcludeFilter.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/FilterableDependency.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/Include.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/IncludeFilter.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/JavaCompilerPluginConfiguration.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/JavaExecutable.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/JavaProcessExecutor.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/MatchingGroupIdFilter.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/RunArguments.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/maven/plugin/aot/RunProcess.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/aot/generate/BasicJsonWriter.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/aot/generate/ExecutableMode.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/aot/generate/MemberCategory.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/metrics/aggregate/DubboMergingDigest.java</exclude>
+                                    <exclude>src/main/java/org/apache/dubbo/metrics/aggregate/DubboAbstractTDigest.java</exclude>
+                                </excludes>
+                                <palantirJavaFormat />
+                                <removeUnusedImports />
+                                <importOrder>
+                                    <file>dubbo-importorder.txt</file>
+                                </importOrder>
+                                <licenseHeader>
+                                    <file>checkstyle-header.txt</file>
+                                </licenseHeader>
+                            </java>
+                            <pom>
+                                <sortPom>
+                                    <expandEmptyElements>false</expandEmptyElements>
+                                    <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+                                </sortPom>
+                            </pom>
+                            <upToDateChecking>
+                                <enabled>true</enabled>
+                            </upToDateChecking>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.alibaba</groupId>
+                                <artifactId>dubbo-shared-resources</artifactId>
+                                <version>${dubbo-shared-resources.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>${spotless.action}</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
