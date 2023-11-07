@@ -19,13 +19,14 @@ spring:
 
 dubbo:
   application:
+    qos-port: 3333
     logger: slf4j
     name: dubbo-springboot-demo-provider
   registry:
-    address: nacos://${nacos.address:127.0.0.1}:8848
+    address: nacos://127.0.0.1:8848
   protocol:
-    name: rest
-    port: 8080
+    name: dubbo
+    port: 8081
 logging:
   pattern:
     level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
